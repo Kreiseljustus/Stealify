@@ -1,6 +1,9 @@
 # Stealify
+For educational purpose only
 
-This is a small project to download songs from youtube and then play them back.
+Downloading copyrighted material is not endorsed by Stealify and not permitted except you have the required rights.
+
+This is a small project to download audio from youtube and then play it back.
 
 It uses [youtube-dl](https://github.com/ytdl-org/youtube-dl) to download the video and then converts it using [ffmpeg](https://ffmpeg.org/). <br>
 
