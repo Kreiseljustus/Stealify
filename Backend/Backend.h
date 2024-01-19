@@ -5,6 +5,8 @@
 #include <SFML/Audio.hpp>
 #include "MusicTypes.h"
 
+#define DEBUG(str) do { std::cout << "Backend: "<< str << std::endl; } while(0);
+
 namespace Backend {
 	std::string downloadSong(std::string url);
 	void playSong(std::string songName, sf::SoundBuffer buffer, sf::Sound sound);

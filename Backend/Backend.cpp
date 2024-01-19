@@ -21,7 +21,6 @@
 
 #include <SFML/Audio.hpp>
 
-
 namespace Backend {
 	Json::Value loadedDirectory;
 	Song currentSong;
@@ -92,7 +91,7 @@ namespace Backend {
 				std::transform(songName.begin(), songName.end(), songName.begin(), [](unsigned char c) {
 					return std::tolower(c);
 					});
-				if (m_debug) std::cout << "Playing " + songName << std::endl;
+				if (m_debug) DEBUG("Playing " << songName);
 				//Backend::playSong(songName, buffer, sound);
 			}
 			else {
@@ -108,7 +107,7 @@ namespace Backend {
 			}
 			else {
 				float currentVolume = sound.getVolume();
-				std::cout << "Current volume set to " << currentVolume << std::endl;
+				DEBUG("Current volume set to " << currentVolume);
 				awaitEnter();
 			}
 		}
@@ -333,11 +332,11 @@ namespace Backend {
 			std::cerr << "Failed to load audio file." << std::endl;
 		}
 
-		std::cout << loadedDirectory["songs"];
+		DEBUG(loadedDirectory["songs"]);
 
 		sound.setBuffer(buffer);
 
-		
+		DEBUG("Playing " << songName);
 			sound.play();
 			while (sound.getStatus() == sf::Sound::Playing) {
 				std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -368,10 +367,10 @@ namespace Backend {
 	void checkFFMPEGInstallation() {
 		std::string output = exec("ffmpeg");
 
-		if (m_debug) { std::cout << output; awaitEnter(); }
+		if (m_debug) { DEBUG(output); awaitEnter(); }
 
 		if (output.find("not recognized") != std::string::npos || (output.find("cannot find the path specified") != std::string::npos) || (output.find("kann den angegebenen Pfad nicht finden") != std::string::npos)) {
-			std::cout << "FFMPEG not installed, downloading...";
+			DEBUG("FFMPEG not installed, downloading...");
 			const char* powershellScript = R"(
 			# PowerShell script content here
 			$ffmpegUrl = "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip"
@@ -405,13 +404,11 @@ namespace Backend {
 			scriptFile.close();
 
 			std::string output = exec("powershell.exe -ExecutionPolicy Bypass -File ./install_ffmpeg.ps1 -Verb RunAs");
-			std::cout << output;
+			DEBUG(output);
 			if (m_debug) awaitEnter();
 			remove("install_ffmpeg.ps1");
 
-			std::cout << std::endl;
-
-			std::cout << "Please restart the programm! Press Enter to exit";
+			DEBUG("Please restart the programm! Press Enter to exit");
 			std::string dummy;
 			std::getline(std::cin, dummy);
 			exit(0);
