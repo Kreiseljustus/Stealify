@@ -8,6 +8,9 @@ struct Song {
 	std::string storageLocation;
 	int sizeInBytes;
 
+	std::string imageLocation;
+	int duration;
+
 	std::string songName;
 	std::string artist;
 

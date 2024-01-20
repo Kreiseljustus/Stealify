@@ -58,11 +58,18 @@ namespace Frontend.Core
         [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ResourceManager_GetAvailableSongs(IntPtr resource);
 
+        [DllImport("Backend.dll", CallingConvention=CallingConvention.Cdecl)]
+        private static extern void DestroyResourceManager(IntPtr resource);
+
         private IntPtr pointer;
 
         public ResourceManager(IntPtr resourceManagerPointer)
         {
             pointer = resourceManagerPointer;
+        }
+        ~ResourceManager()
+        {
+            DestroyResourceManager(pointer);
         }
 
         public List<Song> getSongs() {
@@ -71,11 +78,9 @@ namespace Frontend.Core
             Dictionary<string, Song> Songs = new Dictionary<string, Song>();
             Songs = JsonConvert.DeserializeObject<Dictionary<string, Song>>(result);
 
-            Console.WriteLine(Songs.Values);
+            Console.WriteLine(result);
 
             List<Song> songsList = Songs.Values.ToList();
-
-            Console.WriteLine(songsList[0].SongName);
 
             return songsList;
         }
@@ -84,11 +89,16 @@ namespace Frontend.Core
     [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class Song
     {
+
+
         [JsonProperty("storageLocation")]
         public string StorageLocation { get; set; }
 
         [JsonProperty("sizeInBytes")]
         public int SizeInBytes { get; set; }
+
+        [JsonProperty("duration")]
+        public int Duration { get; set; }
 
         [JsonProperty("songName")]
         public string SongName { get; set; }
@@ -110,9 +120,17 @@ namespace Frontend.Core
 
         [JsonProperty("timeRemaining")]
         public int TimeRemaining { get; set; }
+
+        [JsonIgnore]
+        public string FormattedDuration
+        {
+            get
+            {
+                int minutes = Duration / 60;
+                int seconds = Duration % 60;
+
+                return $"{minutes:D2}:{seconds:D2}";
+            }
+        }
     }
-
-
-
-
 }

@@ -1,4 +1,5 @@
 #include "FileManagment.h"
+#include "Debug.h"
 
 void reloadDirectory(Json::Value& loadedDirectory, std::vector<Playlist>& playlists) {
 	Json::Reader reader;
@@ -41,6 +42,19 @@ void reloadDirectory(Json::Value& loadedDirectory, std::vector<Playlist>& playli
 
 }
 
+int getDuration(std::string path) {
+	sf::Music music;
+
+	if (music.openFromFile(path)) {
+		sf::Time duration = music.getDuration();
+		return duration.asSeconds();
+	}
+	else {
+		DEBUG("Error loading file for duration checking...");
+		return 0;
+	}
+}
+
 std::string convertToAudio(std::string filePath, SaveStrategy strategy, std::string songName) {
 
 	size_t dotPosition = filePath.find_last_of('.');
@@ -54,6 +68,7 @@ std::string convertToAudio(std::string filePath, SaveStrategy strategy, std::str
 
 	if (strategy == WAV) {
 		if (convertWithFFMPEG(filePath, "MusicLibrary/" + songName, ".wav") == 0) {
+			std::string path = "./MusicLibrary/" + songName + ".wav";
 			return "./MusicLibrary/" + songName + ".wav";
 		}
 		else {
@@ -62,6 +77,8 @@ std::string convertToAudio(std::string filePath, SaveStrategy strategy, std::str
 	}
 	else if (strategy == MP3) {
 		if (convertWithFFMPEG(filePath, "MusicLibrary/" + songName, ".mp3") == 0) {
+			std::string path = "./MusicLibrary/" + songName + ".mp3";
+
 			return "./MusicLibrary/" + songName + ".mp3";
 		}
 		else {
@@ -175,6 +192,8 @@ int addToSongDirectory(Song song, SaveStrategy strategy) {
 		root["songs"][song.songName]["artist"] = song.artist;
 		root["songs"][song.songName]["sizeInBytes"] = song.sizeInBytes;
 		root["songs"][song.songName]["hasLyricsAvailable"] = song.hasLyricsAvailable;
+		root["songs"][song.songName]["duration"] = song.duration;
+		root["songs"][song.songName]["imageLocation"] = song.imageLocation;
 
 		std::ofstream newFile("SongDirectory.json");
 

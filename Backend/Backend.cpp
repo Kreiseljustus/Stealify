@@ -258,6 +258,8 @@ namespace Backend {
 		std::string storageLocation;
 		try {
 			storageLocation = convertToAudio(filePath, saveStrategy, songName);
+			song.duration = getDuration(storageLocation);
+			DEBUG("Song duration is " << song.duration);
 		}
 		catch (const std::exception& e) {
 			std::cout << e.what() << std::endl;
@@ -297,6 +299,7 @@ namespace Backend {
 			song.artist = loadedDirectory["songs"][songName]["artist"].asString();
 			song.sizeInBytes = loadedDirectory["songs"][songName]["sizeInBytes"].asInt();
 			song.hasLyricsAvailable = loadedDirectory["songs"][songName]["hasLyricsAvailable"].asBool();
+			song.duration = loadedDirectory["songs"][songName]["duration"].asInt();
 		}
 		else {
 			std::cout << "Couldn't find song in loaded dictionary\n";
