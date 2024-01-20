@@ -29,6 +29,7 @@ namespace Frontend.MVVM.View
             InitializeComponent();
             List<Song> songs = resourceManager.getSongs();
             songsListBox.ItemsSource = songs;
+            songsListBox.DataContext = this;
         }
 
         private async void songsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

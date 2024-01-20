@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -55,7 +56,7 @@ namespace Frontend.Core
     class ResourceManager
     {
         [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void ResourceManager_GetAvailableSongs(IntPtr resourceManager, out IntPtr songsArray, out int songCount);
+        private static extern IntPtr ResourceManager_GetAvailableSongs(IntPtr resource);
 
         private IntPtr pointer;
 
@@ -64,75 +65,54 @@ namespace Frontend.Core
             pointer = resourceManagerPointer;
         }
 
-        private static List<Song> IntPtrArrayToList(IntPtr songsArray, int songCount)
-        {
-            List<Song> list = new List<Song>();
-            int structSize = Marshal.SizeOf<Song>();
-
-            // Create a managed array to hold the data
-            byte[] dataArray = new byte[structSize * songCount];
-
-            // Copy the data from native array to managed array
-            Marshal.Copy(songsArray, dataArray, 0, dataArray.Length);
-
-            // Create a GCHandle to pin the managed array in memory
-            GCHandle handle = GCHandle.Alloc(dataArray, GCHandleType.Pinned);
-            Console.WriteLine("Data: " + BitConverter.ToString(dataArray));
-            try
-            {
-                // Use PtrToStructure to convert the pinned data to a Song structure
-                for (int i = 0; i < songCount; i++)
-                {
-                    IntPtr currentPtr = IntPtr.Add(handle.AddrOfPinnedObject(), i * structSize);
-                    Song currentSong = Marshal.PtrToStructure<Song>(currentPtr);
-
-                    // Access string fields directly, no need for PtrToStringAnsi
-                    Console.WriteLine(currentSong.SongName + " this is current songname");
-                    list.Add(currentSong);
-                }
-            }
-            finally
-            {
-                // Release the pinned memory
-                handle.Free();
-            }
-
-            return list;
-        }
-
-
-
-
         public List<Song> getSongs() {
-            ResourceManager_GetAvailableSongs(pointer, out IntPtr songsArray, out int songCount);
-            Console.WriteLine("Before converting: received 0x" + songsArray.ToString("X") + " as array pointer");
-            Console.WriteLine("Before converting: " + "received " + songCount + " as song count");
-            List<Song> availableSongs = IntPtrArrayToList(songsArray, songCount);
-            return availableSongs;
+            string result = Marshal.PtrToStringAnsi(ResourceManager_GetAvailableSongs(pointer));
+
+            Dictionary<string, Song> Songs = new Dictionary<string, Song>();
+            Songs = JsonConvert.DeserializeObject<Dictionary<string, Song>>(result);
+
+            Console.WriteLine(Songs.Values);
+
+            List<Song> songsList = Songs.Values.ToList();
+
+            Console.WriteLine(songsList[0].SongName);
+
+            return songsList;
         }
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-    public struct Song
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
+    public class Song
     {
-        // Point to mp3 or other type of file (.wav, .ogg)
-            [MarshalAs(UnmanagedType.LPStr)]
-            public string StorageLocation;
-            public int SizeInBytes;
+        [JsonProperty("storageLocation")]
+        public string StorageLocation { get; set; }
 
-            [MarshalAs(UnmanagedType.LPStr)]
-            public string SongName;
-            [MarshalAs(UnmanagedType.LPStr)]
-            public string Artist;
+        [JsonProperty("sizeInBytes")]
+        public int SizeInBytes { get; set; }
 
-            public bool PartiallyLoaded;
-            public bool IsPlaying;
-            public bool IsPaused;
+        [JsonProperty("songName")]
+        public string SongName { get; set; }
 
-            // TODO
-            public bool HasLyricsAvailable;
+        [JsonProperty("artist")]
+        public string Artist { get; set; }
 
-            public int TimeRemaining;
+        [JsonProperty("partiallyLoaded")]
+        public bool PartiallyLoaded { get; set; }
+
+        [JsonProperty("isPlaying")]
+        public bool IsPlaying { get; set; }
+
+        [JsonProperty("isPaused")]
+        public bool IsPaused { get; set; }
+
+        [JsonProperty("hasLyricsAvailable")]
+        public bool HasLyricsAvailable { get; set; }
+
+        [JsonProperty("timeRemaining")]
+        public int TimeRemaining { get; set; }
     }
+
+
+
 
 }
