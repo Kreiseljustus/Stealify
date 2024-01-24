@@ -4,7 +4,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type RadioButton}">
-                    <Border Background="Transparent" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                    <Border x:Name="border" Background="Transparent" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="10">
                         <BulletDecorator Background="Transparent">
                             <BulletDecorator.Bullet>
                                 <Grid Width="0" Height="0"/>
@@ -14,7 +14,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter Property="Background" Value="LightBlue"/>
+                            <Setter TargetName="border" Property="Background" Value="#8272B8"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

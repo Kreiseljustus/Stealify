@@ -78,6 +78,7 @@
              Style="{StaticResource NoDotRadioButtonStyle}"
              IsChecked="False"
              BorderThickness="0"
+             Command="{Binding DownloadViewCommand}"
              BorderBrush="{x:Null}" Checked="RadioButton_Checked"/>
             </StackPanel>
 

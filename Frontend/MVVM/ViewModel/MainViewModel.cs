@@ -12,9 +12,11 @@ namespace Frontend.MVVM.ViewModel
 
         public RelayCommand HomeViewCommand { get; set; }
         public RelayCommand LikedSongsViewCommand { get; set; }
+        public RelayCommand DownloadViewCommand { get; set; }
 
         public HomeViewModel HomeVM { get; set; }
-        public LikedSongsViewModel LikedSongsViewModel { get; set; }
+        public LikedSongsViewModel LikedSongsVM { get; set; }
+        public DownloadViewModel DownloadVM { get; set; }
 
         private object _currentView;
 
@@ -29,7 +31,9 @@ namespace Frontend.MVVM.ViewModel
         public MainViewModel()
         {
             HomeVM = new HomeViewModel();
-            LikedSongsViewModel = new LikedSongsViewModel();
+            LikedSongsVM = new LikedSongsViewModel();
+            DownloadVM = new DownloadViewModel();
+
             CurrentView = HomeVM;
 
             HomeViewCommand = new RelayCommand(o => {
@@ -37,7 +41,12 @@ namespace Frontend.MVVM.ViewModel
             });
 
             LikedSongsViewCommand = new RelayCommand(o => {
-                CurrentView = LikedSongsViewModel;
+                CurrentView = LikedSongsVM;
+            });
+
+            DownloadViewCommand = new RelayCommand(o =>
+            {
+                CurrentView = DownloadVM;
             });
         }
     }

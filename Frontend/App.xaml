@@ -21,6 +21,10 @@
             <DataTemplate DataType="{x:Type viewModel:LikedSongsViewModel}">
                 <view:LikedSongs/>
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:DownloadViewModel}">
+                <view:DownloadView/>
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

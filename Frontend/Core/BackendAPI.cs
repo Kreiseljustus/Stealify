@@ -78,8 +78,10 @@ namespace Frontend.Core
             Dictionary<string, Song> Songs = new Dictionary<string, Song>();
             Songs = JsonConvert.DeserializeObject<Dictionary<string, Song>>(result);
 
-            Console.WriteLine(result);
+            //Console.WriteLine(result);
 
+            if (Songs == null) return new List<Song> { new Song { SongName="Head over to the download section"} }; 
+            
             List<Song> songsList = Songs.Values.ToList();
 
             return songsList;
