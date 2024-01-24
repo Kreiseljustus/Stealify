@@ -68,7 +68,6 @@ std::string convertToAudio(std::string filePath, SaveStrategy strategy, std::str
 
 	if (strategy == WAV) {
 		if (convertWithFFMPEG(filePath, "MusicLibrary/" + songName, ".wav") == 0) {
-			std::string path = "./MusicLibrary/" + songName + ".wav";
 			return "./MusicLibrary/" + songName + ".wav";
 		}
 		else {
@@ -77,8 +76,6 @@ std::string convertToAudio(std::string filePath, SaveStrategy strategy, std::str
 	}
 	else if (strategy == MP3) {
 		if (convertWithFFMPEG(filePath, "MusicLibrary/" + songName, ".mp3") == 0) {
-			std::string path = "./MusicLibrary/" + songName + ".mp3";
-
 			return "./MusicLibrary/" + songName + ".mp3";
 		}
 		else {

@@ -241,7 +241,7 @@ namespace Backend {
 		}
 	}
 
-	void addSong(std::string url, std::string songName, std::string artist) {
+	void addSong(const std::string& url, std::string songName, std::string artist) {
 		Song song;
 
 		std::string filePath = downloadSong(url);
@@ -325,7 +325,7 @@ namespace Backend {
 		}
 	}
 
-	void playSong(std::string songName, sf::SoundBuffer buffer, sf::Sound sound) {
+	void playSong(const std::string& songName, sf::SoundBuffer buffer, sf::Sound sound) {
 		currentSong = getSong(songName);
 		currentSong.isPlaying = true;
 		//sound.setVolume(4);
@@ -348,9 +348,7 @@ namespace Backend {
 			if (playingPlaylist) {
 				currentPlaylist.songIndex += 1;
 				if (currentPlaylist.songIndex < currentPlaylist.songs.size()) {
-					Song nextSong;
-					nextSong = getNextSongFromPlaylist();
-					//playSong(nextSong.songName, buffer,sound);
+
 				}
 				else {
 					currentPlaylist.songIndex = 0;

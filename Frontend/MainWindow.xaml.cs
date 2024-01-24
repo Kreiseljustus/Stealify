@@ -26,7 +26,7 @@ namespace Frontend
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
-
+            //Gets handled by Observable Object
         }
     }
 }

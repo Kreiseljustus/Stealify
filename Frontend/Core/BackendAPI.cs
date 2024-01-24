@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Frontend.Core
 {
-    class BackendAPI
+    static class BackendAPI
     {
         [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr CreateAudioManager();
@@ -35,7 +35,7 @@ namespace Frontend.Core
         [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern void AudioManager_PlaySong(IntPtr audio, [MarshalAs(UnmanagedType.LPStr)] string name);
 
-        private IntPtr pointer;
+        private readonly IntPtr pointer;
 
         public void playSong(string songName)
         {
@@ -78,9 +78,7 @@ namespace Frontend.Core
             Dictionary<string, Song> Songs = new Dictionary<string, Song>();
             Songs = JsonConvert.DeserializeObject<Dictionary<string, Song>>(result);
 
-            //Console.WriteLine(result);
-
-            if (Songs == null) return new List<Song> { new Song { SongName="Head over to the download section"} }; 
+            if (Songs == null) { return new List<Song> { new Song { SongName = "Head over to the download section" } }; }
             
             List<Song> songsList = Songs.Values.ToList();
 
