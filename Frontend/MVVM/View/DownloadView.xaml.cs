@@ -20,9 +20,29 @@ namespace Frontend.MVVM.View
     /// </summary>
     public partial class DownloadView : UserControl
     {
+
+
         public DownloadView()
         {
             InitializeComponent();
+        }
+
+        //Song url
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+        
+        //Song name
+        private void TextBox_TextChanged_1(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        //Artist
+        private void TextBox_TextChanged_2(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }

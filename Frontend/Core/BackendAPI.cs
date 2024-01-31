@@ -2,26 +2,38 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Frontend.Core
 {
-    static class BackendAPI
+    class BackendAPI
     {
+
+        private static BackendAPI instance;
+        public static BackendAPI getBackendAPI()
+        {
+            if(instance == null)
+            {
+                instance = new BackendAPI();
+            }
+            return instance;
+        }
+
         [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr CreateAudioManager();
+        private static extern IntPtr CreateAudioManager();
         [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr CreateResourceManager();
 
-        public static AudioManager createAudioManager()
+        public AudioManager createAudioManager()
         {
             IntPtr audioManager = CreateAudioManager();
             return new AudioManager(audioManager);
         }
 
-        public static ResourceManager createResourceManager()
+        public ResourceManager createResourceManager()
         {
             IntPtr resourceManager = CreateResourceManager();
             return new ResourceManager(resourceManager);
@@ -31,25 +43,39 @@ namespace Frontend.Core
     class AudioManager
     {
         [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern IntPtr CreateAudioManager();
+
+        private static AudioManager instance;
+        public static AudioManager getAudioManager()
+        {
+            if(instance == null)
+            {
+                IntPtr p = CreateAudioManager();
+                instance = new AudioManager(p);
+            }
+            return instance;
+        }
+
+        readonly IntPtr _pointer;
+
+        [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern void DestroyAudioManager(IntPtr audio);
         [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern void AudioManager_PlaySong(IntPtr audio, [MarshalAs(UnmanagedType.LPStr)] string name);
 
-        private readonly IntPtr pointer;
-
         public void playSong(string songName)
         {
-            AudioManager_PlaySong(pointer, songName);
+            AudioManager_PlaySong(_pointer, songName);
         }
 
         //Obtain the required pointer from the CreateAudioManager method exposed by the Backend.dll
         public AudioManager(IntPtr audioManagerPointer) { 
-            pointer = audioManagerPointer; 
+            _pointer = audioManagerPointer; 
         }
 
         ~AudioManager()
         {
-            DestroyAudioManager(pointer);
+            DestroyAudioManager(_pointer);
         }
     }
 

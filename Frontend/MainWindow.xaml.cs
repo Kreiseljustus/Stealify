@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Frontend.Core;
+using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,8 @@ namespace Frontend
     /// </summary>
     public partial class MainWindow : Window
     {
+        AudioManager audioManager = AudioManager.getAudioManager();
+        ResourceManager resourceManager;
         public MainWindow()
         {
             InitializeComponent();

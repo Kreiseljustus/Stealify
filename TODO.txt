@@ -2,3 +2,11 @@ VERSION 0.2 - GUI Update
 
 TODO:
 Working on - Let user download songs
+
+Download Section:
+URL textbox
+name textbox
+artist textbox
+file format selector
+playlist selector
+download thumbnail?

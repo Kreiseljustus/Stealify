@@ -7,8 +7,15 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Label Content="Download POG" HorizontalAlignment="Left" Margin="44,26,0,0" VerticalAlignment="Top"
-               Background="White"/>
+        <Border VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="350" Background="#A27FB8" Margin="20" CornerRadius="70">
+            <StackPanel HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
 
+                <TextBox x:Name="TextBox_SongUrl" Style="{StaticResource DownloadTextBox}" Margin="0,20,0,0" Text="Song url" TextChanged="TextBox_TextChanged"/>
+                <TextBox x:Name="TextBox_SongName" Style="{StaticResource DownloadTextBox}" Margin="0,20,0,0" Text="Song name" TextChanged="TextBox_TextChanged_1"/>
+                <TextBox x:Name="TextBox_Artist" Style="{StaticResource DownloadTextBox}" Margin="0,20,0,0" Text="Artist" TextChanged="TextBox_TextChanged_2"/>
+
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>
