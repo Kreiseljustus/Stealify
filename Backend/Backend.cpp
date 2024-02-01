@@ -1,5 +1,4 @@
 #include "Backend.h"
-
 #include "Settings.h"
 
 #include "MusicTypes.h"
@@ -20,6 +19,8 @@
 #include <mmsystem.h>
 
 #include <SFML/Audio.hpp>
+
+#include "ExportManager.h"
 
 namespace Backend {
 	Json::Value loadedDirectory;
@@ -242,6 +243,7 @@ namespace Backend {
 	}
 
 	void addSong(const std::string& url, std::string songName, std::string artist) {
+		ResourceManager::currentProgress = 0;
 		Song song;
 
 		std::string filePath = downloadSong(url);

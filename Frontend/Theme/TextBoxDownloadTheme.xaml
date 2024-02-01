@@ -16,15 +16,14 @@
                                      BorderThickness="0"
                                      Background="Transparent"
                                      VerticalContentAlignment="Center"
-                                     HorizontalAlignment="Center"
                                      Padding="5"
                                      Foreground="#cfcfcf"
-                                     x:Name="ValueBox"/>
+                                     x:Name="TextBox"/>
 
                             <TextBlock IsHitTestVisible="False"
-                                       Text="{TemplateBinding Text}"
+                                       Text="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
                                        VerticalAlignment="Center"
-                                       HorizontalAlignment="Center"
+                                       HorizontalAlignment="Left"
                                        Margin="10,0,0,0"
                                        FontSize="11"
                                        Foreground="DarkGray"
@@ -32,7 +31,7 @@
                                 <TextBlock.Style>
                                     <Style TargetType="{x:Type TextBlock}">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Text, ElementName=ValueBox}" Value="">
+                                            <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
                                                 <Setter Property="Visibility" Value="Visible"/>
                                             </DataTrigger>
                                         </Style.Triggers>
@@ -41,7 +40,7 @@
                                 </TextBlock.Style>
                             </TextBlock>
                         </Grid>
-                        
+
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

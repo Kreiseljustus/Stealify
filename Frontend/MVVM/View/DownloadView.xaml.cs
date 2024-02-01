@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Frontend.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,7 +22,12 @@ namespace Frontend.MVVM.View
     /// </summary>
     public partial class DownloadView : UserControl
     {
+        static BackendAPI backendAPI = BackendAPI.getBackendAPI();
+        Core.ResourceManager resourceManager = backendAPI.createResourceManager();
 
+        string songUrl;
+        string songName;
+        string artist;
 
         public DownloadView()
         {
@@ -30,19 +37,30 @@ namespace Frontend.MVVM.View
         //Song url
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            songUrl = TextBox_SongUrl.Text;
+            Console.WriteLine("Text is: " + TextBox_SongUrl.Text);
+            Console.WriteLine(songUrl);
         }
         
         //Song name
         private void TextBox_TextChanged_1(object sender, TextChangedEventArgs e)
         {
-
+            songName = TextBox_SongName.Text;
+            Console.WriteLine("Text is: " + TextBox_SongName.Text);
+            Console.WriteLine(songName);
         }
 
         //Artist
         private void TextBox_TextChanged_2(object sender, TextChangedEventArgs e)
         {
+            artist = TextBox_Artist.Text;
+            Console.WriteLine("Text is: " + TextBox_Artist.Text);
+            Console.WriteLine(artist);
+        }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine(resourceManager.getCurrentProgress());
         }
     }
 }

@@ -82,6 +82,10 @@ namespace Frontend.Core
     class ResourceManager
     {
         [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern string GetCurrentStatusMessage(IntPtr resource);
+        [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int GetCurrentProgress(IntPtr resource);
+        [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ResourceManager_GetAvailableSongs(IntPtr resource);
 
         [DllImport("Backend.dll", CallingConvention=CallingConvention.Cdecl)]
@@ -109,6 +113,11 @@ namespace Frontend.Core
             List<Song> songsList = Songs.Values.ToList();
 
             return songsList;
+        }
+
+        public int getCurrentProgress()
+        {
+            return GetCurrentProgress(pointer);
         }
     }
 

@@ -37,7 +37,11 @@
 	private:
 		Json::Value loadedDirectory;
 		std::vector<Playlist> playlists;
+		
 	public:
+		static char* statusMessage;
+		static int currentProgress;
+
 		Json::Value getDirectory() {
 			DEBUG(loadedDirectory);
 			return loadedDirectory;
@@ -46,11 +50,35 @@
 			reloadDirectory(loadedDirectory, playlists);
 		}
 	};
+
+	char* ResourceManager::statusMessage = nullptr;
+	int ResourceManager::currentProgress = 0;
 	
+#pragma region ExternAudioManager
 	extern "C" BACKEND AudioManager * CreateAudioManager() {
 		AudioManager* audio = new AudioManager();
 		std::cout << "AudioManager created: " << audio << std::endl;
 		return audio;
+	}
+	extern "C" BACKEND void AudioManager_PlaySong(AudioManager * audio, const char* name) {
+		audio->setVolume(4);
+		std::cout << "Received " << name << std::endl;
+		audio->playSong(name);
+	}
+	extern "C" BACKEND void DestroyAudioManager(AudioManager * audio) {
+		std::cout << "Destroying AudioManager: " << audio << std::endl;
+		delete audio;
+	}
+#pragma endregion
+
+#pragma region ExternResourceManager
+
+	extern "C" BACKEND int GetCurrentProgress(ResourceManager* resource) {
+		return (resource->currentProgress);
+	}
+
+	extern "C" BACKEND const char* GetCurrentStatusMessage(ResourceManager * resource) {
+		return (resource->statusMessage);
 	}
 
 	extern "C" BACKEND ResourceManager* CreateResourceManager() {
@@ -67,17 +95,8 @@
 		return _strdup(jsonString.c_str());
 	}
 
-	extern "C" BACKEND void AudioManager_PlaySong(AudioManager* audio, const char* name) {
-		audio->setVolume(4);
-		std::cout << "Received " << name << std::endl;
-		audio->playSong(name);
-	}
-	extern "C" BACKEND void DestroyAudioManager(AudioManager * audio) {
-		std::cout << "Destroying AudioManager: " << audio << std::endl;
-		delete audio;
-	}
-
 	extern "C" BACKEND void DestroyResourceManager(ResourceManager * resource) {
 		DEBUG("Destroying AudioManager: " << resource);
 		delete resource;
 	}
+#pragma endregion
