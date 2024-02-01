@@ -35,7 +35,13 @@ namespace Frontend.MVVM.View
 
         private async void songsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            await Task.Run(() => { audioManager.playSong("20:15"); });
+            if (songsListBox.SelectedItem != null && songsListBox.SelectedItem is Song selectedSong)
+            {
+                // Assuming Song class has a property named "songName"
+                string songName = selectedSong.SongName;
+
+                await Task.Run(() => { audioManager.playSong(songName); });
+            }
         }
     }
 }

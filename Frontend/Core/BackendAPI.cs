@@ -85,11 +85,13 @@ namespace Frontend.Core
         private static extern string GetCurrentStatusMessage(IntPtr resource);
         [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern int GetCurrentProgress(IntPtr resource);
+        [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl, CharSet=CharSet.Ansi)]
+        private static extern void DownloadSong(IntPtr resource, [MarshalAs(UnmanagedType.LPStr)] string songUrl, [MarshalAs(UnmanagedType.LPStr)] string songName, [MarshalAs(UnmanagedType.LPStr)] string artist);
         [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ResourceManager_GetAvailableSongs(IntPtr resource);
 
-        [DllImport("Backend.dll", CallingConvention=CallingConvention.Cdecl)]
-        private static extern void DestroyResourceManager(IntPtr resource);
+//        [DllImport("Backend.dll", CallingConvention=CallingConvention.Cdecl)]
+        //private static extern void DestroyResourceManager(IntPtr resource);
 
         private IntPtr pointer;
 
@@ -99,7 +101,7 @@ namespace Frontend.Core
         }
         ~ResourceManager()
         {
-            DestroyResourceManager(pointer);
+            //DestroyResourceManager(pointer);
         }
 
         public List<Song> getSongs() {
@@ -118,6 +120,16 @@ namespace Frontend.Core
         public int getCurrentProgress()
         {
             return GetCurrentProgress(pointer);
+        }
+
+        public void downloadSong(string songUrl, string songName, string artist)
+        {
+            DownloadSong(pointer, songUrl, songName, artist);
+        }
+
+        public string getCurrentStatusMessage()
+        {
+            return GetCurrentStatusMessage(pointer);
         }
     }
 

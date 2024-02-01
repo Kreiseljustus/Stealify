@@ -11,11 +11,12 @@
             <StackPanel HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch">
 
-                <TextBox x:Name="TextBox_SongUrl" Margin="0,20,0,0" TextChanged="TextBox_TextChanged" Tag="Song URL"/>
-                <TextBox x:Name="TextBox_SongName" Margin="0,20,0,0" TextChanged="TextBox_TextChanged_1" Tag="Song Name"/>
-                <TextBox x:Name="TextBox_Artist" Margin="0,20,0,0" TextChanged="TextBox_TextChanged_2" Tag="Artist"/>
+                <TextBox x:Name="TextBox_SongUrl" Margin="0,20,0,0" Tag="Song URL"/>
+                <TextBox x:Name="TextBox_SongName" Margin="0,20,0,0" Tag="Song Name"/>
+                <TextBox x:Name="TextBox_Artist" Margin="0,20,0,0" Tag="Artist"/>
                 <Button Margin="10" Height="Auto" Content="Download" Click="Button_Click"/>
-                <ProgressBar Value="24" Height="20" Cursor="Wait"/>
+                <ProgressBar Value="24" Height="20" Cursor="Wait" Name="Progress"/>
+                <TextBlock Padding="0" Margin="0" Name="Status" Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
             </StackPanel>
         </Border>

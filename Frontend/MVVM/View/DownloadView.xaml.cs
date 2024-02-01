@@ -25,42 +25,41 @@ namespace Frontend.MVVM.View
         static BackendAPI backendAPI = BackendAPI.getBackendAPI();
         Core.ResourceManager resourceManager = backendAPI.createResourceManager();
 
-        string songUrl;
-        string songName;
-        string artist;
-
         public DownloadView()
         {
             InitializeComponent();
         }
 
-        //Song url
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            songUrl = TextBox_SongUrl.Text;
-            Console.WriteLine("Text is: " + TextBox_SongUrl.Text);
-            Console.WriteLine(songUrl);
-        }
-        
-        //Song name
-        private void TextBox_TextChanged_1(object sender, TextChangedEventArgs e)
-        {
-            songName = TextBox_SongName.Text;
-            Console.WriteLine("Text is: " + TextBox_SongName.Text);
-            Console.WriteLine(songName);
-        }
+            string url = TextBox_SongUrl.Text;
+            string name = TextBox_SongName.Text;
+            string artistName = TextBox_Artist.Text;
 
-        //Artist
-        private void TextBox_TextChanged_2(object sender, TextChangedEventArgs e)
-        {
-            artist = TextBox_Artist.Text;
-            Console.WriteLine("Text is: " + TextBox_Artist.Text);
-            Console.WriteLine(artist);
-        }
+            TextBox_Artist.Text = "";
+            TextBox_SongName.Text = "";
+            TextBox_SongUrl.Text = "";
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Console.WriteLine(resourceManager.getCurrentProgress());
+            Task.Run(() => {
+                resourceManager.downloadSong(url, name, artistName); 
+            });
+            while (resourceManager.getCurrentStatusMessage() != "Successfully added song to library!")
+            {
+                if(resourceManager.getCurrentStatusMessage() == "Failed!")
+                {
+                    return;
+                }
+                int progress = resourceManager.getCurrentProgress();
+                string status = resourceManager.getCurrentStatusMessage();
+
+                Dispatcher.Invoke(() => {
+                    Progress.Value = progress;
+                    Console.WriteLine("Status is: " + status);
+                    Status.Text = status;
+                });
+
+                await Task.Delay(100);
+            }
         }
     }
 }

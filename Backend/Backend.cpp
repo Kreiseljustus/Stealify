@@ -205,10 +205,16 @@ namespace Backend {
 
 	//Returns song name
 	std::string downloadSong(std::string url) {
+		ResourceManager::statusMessage = "Downloading files...";
+		DEBUG("Downloading " << url);
 		std::string cmd = "youtube-dl \"" + url + "\" -o " + getDownloadDirectory() + " --write-thumbnail --format 251";
 
 		std::string output = exec(cmd.c_str());
 
+		DEBUG("OUTPUT IS: " << output);
+
+		ResourceManager::statusMessage = "Finding paths...";
+		ResourceManager::currentProgress = 5;
 		if (m_debug) { std::cout << output; awaitEnter(); }
 
 		size_t positionDownloaded = output.find("has already been downloaded");
@@ -229,12 +235,16 @@ namespace Backend {
 					return result;
 				}
 				else {
+					RMD_FAIL();
 					std::cout << ".webm not found in the file path." << std::endl;
 					return "Wrong file format!";
 				}
 			}
 			else {
+				RMD_FAIL();
 				std::cout << "Couldnt find file path!" << std::endl;
+				DEBUG("EXIT");
+				return "0";
 			}
 		}
 		else {
@@ -243,7 +253,9 @@ namespace Backend {
 	}
 
 	void addSong(const std::string& url, std::string songName, std::string artist) {
+		DEBUG("CALLING RESOURCE MANAGER->");
 		ResourceManager::currentProgress = 0;
+		ResourceManager::statusMessage = "Initializing";
 		Song song;
 
 		std::string filePath = downloadSong(url);
@@ -252,7 +264,13 @@ namespace Backend {
 
 		song.artist = artist;
 
+		if (filePath == "0") {
+			return;
+		}
+
 		if (filePath == "-1") {
+			ResourceManager::statusMessage = "Already in Library!";
+			ResourceManager::currentProgress = 0;
 			std::cout << "Song already downloaded! Aborting...\n";
 			awaitEnter();
 			return;
@@ -269,6 +287,9 @@ namespace Backend {
 			return;
 		}
 
+		ResourceManager::currentProgress = 40;
+		ResourceManager::statusMessage = "Finalizing audio...";
+
 		song.storageLocation = storageLocation;
 
 		if (m_debug) { std::cout << song.storageLocation; awaitEnter(); }
@@ -279,6 +300,7 @@ namespace Backend {
 		}
 		catch (const std::filesystem::filesystem_error& e) {
 			std::cerr << "Error: " << e.what() << std::endl;
+			RMD_FAIL();
 			removeSongFiles(song.storageLocation, saveStrategy);
 			return;
 		}
@@ -289,7 +311,12 @@ namespace Backend {
 			removeSongFiles(song.storageLocation, saveStrategy);
 		}
 
+		ResourceManager::currentProgress = 95;
+		ResourceManager::statusMessage = "Reloading Library...";
 		reloadDirectory(loadedDirectory, playlists);
+
+		ResourceManager::currentProgress = 100;
+		ResourceManager::statusMessage = "Successfully added song to library!";
 	}
 
 	Song getSong(std::string songName) {
