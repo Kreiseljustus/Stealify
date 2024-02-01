@@ -32,12 +32,6 @@ namespace Frontend.Core
             IntPtr audioManager = CreateAudioManager();
             return new AudioManager(audioManager);
         }
-
-        public ResourceManager createResourceManager()
-        {
-            IntPtr resourceManager = CreateResourceManager();
-            return new ResourceManager(resourceManager);
-        }
     }
 
     class AudioManager
@@ -81,6 +75,9 @@ namespace Frontend.Core
 
     class ResourceManager
     {
+
+        private static ResourceManager instance;
+
         [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern string GetCurrentStatusMessage(IntPtr resource);
         [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
@@ -90,18 +87,30 @@ namespace Frontend.Core
         [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ResourceManager_GetAvailableSongs(IntPtr resource);
 
-//        [DllImport("Backend.dll", CallingConvention=CallingConvention.Cdecl)]
-        //private static extern void DestroyResourceManager(IntPtr resource);
+        [DllImport("Backend.dll", CallingConvention=CallingConvention.Cdecl)]
+        private static extern void DestroyResourceManager(IntPtr resource);
+        [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern IntPtr CreateResourceManager();
 
         private IntPtr pointer;
 
-        public ResourceManager(IntPtr resourceManagerPointer)
+        private ResourceManager(IntPtr p)
         {
-            pointer = resourceManagerPointer;
+            pointer = p;
+        }
+
+        public static ResourceManager getResourceManager()
+        {
+            if (instance == null)
+            {
+                IntPtr p = CreateResourceManager();
+                instance = new ResourceManager(p);
+            }
+            return instance;
         }
         ~ResourceManager()
         {
-            //DestroyResourceManager(pointer);
+            DestroyResourceManager(pointer);
         }
 
         public List<Song> getSongs() {
@@ -129,7 +138,14 @@ namespace Frontend.Core
 
         public string getCurrentStatusMessage()
         {
-            return GetCurrentStatusMessage(pointer);
+            string status = "None";
+            try
+            {
+                status = GetCurrentStatusMessage(pointer);
+            } catch {
+                Console.WriteLine("SOME WEIRD ERROR");
+            }
+            return status;
         }
     }
 

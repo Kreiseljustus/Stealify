@@ -23,7 +23,7 @@ namespace Frontend.MVVM.View
     public partial class DownloadView : UserControl
     {
         static BackendAPI backendAPI = BackendAPI.getBackendAPI();
-        Core.ResourceManager resourceManager = backendAPI.createResourceManager();
+        Core.ResourceManager resourceManager = Core.ResourceManager.getResourceManager();
 
         public DownloadView()
         {

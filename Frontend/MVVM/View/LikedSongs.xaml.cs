@@ -24,7 +24,7 @@ namespace Frontend.MVVM.View
     {
         AudioManager audioManager = AudioManager.getAudioManager();
         static BackendAPI backendAPI = BackendAPI.getBackendAPI();
-        ResourceManager resourceManager = backendAPI.createResourceManager();
+        ResourceManager resourceManager = ResourceManager.getResourceManager();
         public LikedSongs()
         {
             InitializeComponent();

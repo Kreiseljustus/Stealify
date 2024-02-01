@@ -62,11 +62,12 @@ extern "C" BACKEND void DownloadSong(ResourceManager * pointer, const char* song
 }
 
 extern "C" BACKEND int GetCurrentProgress(ResourceManager * resource) {
+    DEBUG("STILL WORKING");
     return (resource->currentProgress);
 }
 
-extern "C" BACKEND const char* GetCurrentStatusMessage(ResourceManager * resource) {
-    return (resource->statusMessage.c_str());
+extern "C" BACKEND std::string GetCurrentStatusMessage(ResourceManager * resource) {
+    return (resource->statusMessage);
 }
 
 extern "C" BACKEND ResourceManager * CreateResourceManager() {
