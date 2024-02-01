@@ -1,4 +1,6 @@
 #include "FileManagment.h"
+#include "Debug.h"
+#include "ExportManager.h"
 
 void reloadDirectory(Json::Value& loadedDirectory, std::vector<Playlist>& playlists) {
 	Json::Reader reader;
@@ -41,8 +43,22 @@ void reloadDirectory(Json::Value& loadedDirectory, std::vector<Playlist>& playli
 
 }
 
-std::string convertToAudio(std::string filePath, SaveStrategy strategy, std::string songName) {
+int getDuration(std::string path) {
+	sf::Music music;
 
+	if (music.openFromFile(path)) {
+		sf::Time duration = music.getDuration();
+		return duration.asSeconds();
+	}
+	else {
+		DEBUG("Error loading file for duration checking...");
+		return 0;
+	}
+}
+
+std::string convertToAudio(std::string filePath, SaveStrategy strategy, std::string songName) {
+	ResourceManager::currentProgress = 15;
+	ResourceManager::statusMessage = "Converting audio...";
 	size_t dotPosition = filePath.find_last_of('.');
 
 	std::string fileNameWithoutExtension;
@@ -57,6 +73,7 @@ std::string convertToAudio(std::string filePath, SaveStrategy strategy, std::str
 			return "./MusicLibrary/" + songName + ".wav";
 		}
 		else {
+			RMD_FAIL();
 			throw std::runtime_error("Error converting to .wav");
 		}
 	}
@@ -65,6 +82,7 @@ std::string convertToAudio(std::string filePath, SaveStrategy strategy, std::str
 			return "./MusicLibrary/" + songName + ".mp3";
 		}
 		else {
+			RMD_FAIL();
 			throw std::runtime_error("Error converting to .mp3");
 		}
 	}
@@ -147,6 +165,8 @@ int addToPlaylistDirectory(Playlist playlist) {
 }
 
 int addToSongDirectory(Song song, SaveStrategy strategy) {
+	ResourceManager::currentProgress = 50;
+	ResourceManager::statusMessage = "Adding to Library...";
 	Json::Reader reader;
 	Json::StyledWriter writer;
 	Json::Value root;
@@ -175,6 +195,8 @@ int addToSongDirectory(Song song, SaveStrategy strategy) {
 		root["songs"][song.songName]["artist"] = song.artist;
 		root["songs"][song.songName]["sizeInBytes"] = song.sizeInBytes;
 		root["songs"][song.songName]["hasLyricsAvailable"] = song.hasLyricsAvailable;
+		root["songs"][song.songName]["duration"] = song.duration;
+		root["songs"][song.songName]["imageLocation"] = song.imageLocation;
 
 		std::ofstream newFile("SongDirectory.json");
 

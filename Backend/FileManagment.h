@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <string>
 #include <stdexcept>
+#include "SFML/Audio.hpp"
 #include "MusicTypes.h"
 
 enum SaveStrategy {
@@ -18,3 +19,4 @@ void removeSongFiles(std::string songPath, SaveStrategy strategy);
 int addToSongDirectory(Song song, SaveStrategy strategy);
 int addToPlaylistDirectory(Playlist playlist);
 int convertWithFFMPEG(std::string fullPath, std::string pathWithoutExtension, std::string extension);
+int getDuration(std::string path);

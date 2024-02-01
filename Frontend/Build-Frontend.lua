@@ -1,3 +1,7 @@
+printf("WARNING! The project file for the C# project is already included in the repository and this is not up to date!\n Continuing may result in unexpected errors!")
+
+io.read()
+
 project "Frontend"
    kind "WindowedApp"
    language "C#"
