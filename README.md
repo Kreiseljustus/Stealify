@@ -1,3 +1,5 @@
+why was i doing the backend in c++?
+
 # Stealify
 For educational purpose only
 
