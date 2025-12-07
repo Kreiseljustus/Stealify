@@ -22,7 +22,6 @@ namespace Frontend.MVVM.View
     /// </summary>
     public partial class DownloadView : UserControl
     {
-        static BackendAPI backendAPI = BackendAPI.getBackendAPI();
         Core.ResourceManager resourceManager = Core.ResourceManager.getResourceManager();
 
         public DownloadView()
@@ -46,6 +45,9 @@ namespace Frontend.MVVM.View
             while (resourceManager.getCurrentStatusMessage() != "Successfully added song to library!")
             {
                 if(resourceManager.getCurrentStatusMessage() == "Failed!")
+                {
+                    return;
+                } else if(resourceManager.getCurrentStatusMessage() == "Already in Library!")
                 {
                     return;
                 }

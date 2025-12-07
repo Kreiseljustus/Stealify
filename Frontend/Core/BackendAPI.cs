@@ -8,32 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Frontend.Core
-{
-    class BackendAPI
-    {
-
-        private static BackendAPI instance;
-        public static BackendAPI getBackendAPI()
-        {
-            if(instance == null)
-            {
-                instance = new BackendAPI();
-            }
-            return instance;
-        }
-
-        [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr CreateAudioManager();
-        [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr CreateResourceManager();
-
-        public AudioManager createAudioManager()
-        {
-            IntPtr audioManager = CreateAudioManager();
-            return new AudioManager(audioManager);
-        }
-    }
-
+{ 
     class AudioManager
     {
         [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
@@ -75,12 +50,11 @@ namespace Frontend.Core
 
     class ResourceManager
     {
-
         private static ResourceManager instance;
 
-        [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern string GetCurrentStatusMessage(IntPtr resource);
-        [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl, CharSet=CharSet.Ansi)]
+        private static extern IntPtr GetCurrentStatusMessage(IntPtr resource);
+        [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl, CharSet=CharSet.Ansi)]
         private static extern int GetCurrentProgress(IntPtr resource);
         [DllImport("Backend.dll", CallingConvention = CallingConvention.Cdecl, CharSet=CharSet.Ansi)]
         private static extern void DownloadSong(IntPtr resource, [MarshalAs(UnmanagedType.LPStr)] string songUrl, [MarshalAs(UnmanagedType.LPStr)] string songName, [MarshalAs(UnmanagedType.LPStr)] string artist);
@@ -138,22 +112,21 @@ namespace Frontend.Core
 
         public string getCurrentStatusMessage()
         {
-            string status = "None";
+            IntPtr status = IntPtr.Zero;
             try
             {
                 status = GetCurrentStatusMessage(pointer);
+                Console.WriteLine("Received status pointer is " + status.ToString());
             } catch {
                 Console.WriteLine("SOME WEIRD ERROR");
             }
-            return status;
+            return Marshal.PtrToStringAnsi(status);
         }
     }
 
     [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class Song
     {
-
-
         [JsonProperty("storageLocation")]
         public string StorageLocation { get; set; }
 

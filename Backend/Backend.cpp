@@ -205,7 +205,7 @@ namespace Backend {
 
 	//Returns song name
 	std::string downloadSong(std::string url) {
-		ResourceManager::statusMessage = "Downloading files...";
+		//ResourceManager::statusMessage = "Downloading files...";
 		DEBUG("Downloading " << url);
 		std::string cmd = "youtube-dl \"" + url + "\" -o " + getDownloadDirectory() + " --write-thumbnail --format 251";
 

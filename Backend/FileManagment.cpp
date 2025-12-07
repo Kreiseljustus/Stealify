@@ -123,7 +123,7 @@ void removeSongFiles(std::string songPath, SaveStrategy strategy) {
 std::string sanitizeFileName(const std::string& input) {
 	std::string sanitized;
 	for (char c : input) {
-		if (std::isalnum(c) || c == ' ' || c == '-' || c == '_' || c == '\\' || c == '/') {
+		if (std::isalnum(c) || c == ' ' || c == '-' || c == '_' || c == '\\' || c == '/' || c == '<') {
 			sanitized += c;
 		}
 		else if (c == '.') {

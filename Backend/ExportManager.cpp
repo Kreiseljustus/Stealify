@@ -29,6 +29,11 @@ void ResourceManager::downloadSong(std::string url, std::string songName, std::s
     Backend::addSong(url, songName, artist);
 }
 
+ResourceManager::ResourceManager() {
+    DEBUG("Initializing status to abcd");
+    statusMessage = "abcd";
+}
+
 void ResourceManager::reload() {
     reloadDirectory(loadedDirectory, playlists);
 }
@@ -46,7 +51,7 @@ extern "C" BACKEND void AudioManager_PlaySong(AudioManager * audio, const char* 
     audio->playSong(name);
 }
 
-extern "C" BACKEND void DestroyAudioManager(AudioManager * audio) {
+extern "C" BACKEND void DestroyAudioManager(AudioManager* audio) {
     std::cout << "Destroying AudioManager: " << audio << std::endl;
     delete audio;
 }
@@ -66,8 +71,12 @@ extern "C" BACKEND int GetCurrentProgress(ResourceManager * resource) {
     return (resource->currentProgress);
 }
 
-extern "C" BACKEND std::string GetCurrentStatusMessage(ResourceManager * resource) {
-    return (resource->statusMessage);
+extern "C" BACKEND const char* GetCurrentStatusMessage(ResourceManager * resource) {
+    DEBUG("BEFORE RETURN");
+    std::string* p = &resource->statusMessage;
+    DEBUG("String pointer is " << p);
+    DEBUG("String is " << resource->statusMessage);
+    return resource->statusMessage.c_str();
 }
 
 extern "C" BACKEND ResourceManager * CreateResourceManager() {
@@ -85,7 +94,7 @@ extern "C" BACKEND const char* ResourceManager_GetAvailableSongs(ResourceManager
 }
 
 extern "C" BACKEND void DestroyResourceManager(ResourceManager * resource) {
-    DEBUG("Destroying AudioManager: " << resource);
+    DEBUG("Destroying ResourceManager: " << resource);
     delete resource;
 }
 #pragma endregion

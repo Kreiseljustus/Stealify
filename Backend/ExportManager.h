@@ -31,6 +31,7 @@ private:
     std::vector<Playlist> playlists;
 
 public:
+    ResourceManager();
     static std::string statusMessage;
     static int currentProgress;
 

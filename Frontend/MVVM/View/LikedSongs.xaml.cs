@@ -23,7 +23,6 @@ namespace Frontend.MVVM.View
     public partial class LikedSongs : UserControl
     {
         AudioManager audioManager = AudioManager.getAudioManager();
-        static BackendAPI backendAPI = BackendAPI.getBackendAPI();
         ResourceManager resourceManager = ResourceManager.getResourceManager();
         public LikedSongs()
         {
